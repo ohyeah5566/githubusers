@@ -8,10 +8,14 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface GithubUserService {
     @GET("users")
     suspend fun getUsers(): List<GithubUser>
+
+    @GET("users/{username}")
+    suspend fun getSpecUser(@Path("username") username: String): GithubUser
 }
 
 fun getGithubUserService(): GithubUserService {

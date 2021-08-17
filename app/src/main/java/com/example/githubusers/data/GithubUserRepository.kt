@@ -10,4 +10,8 @@ class GithubUserRepository @Inject constructor(
     suspend fun getUsers(): List<GithubUser> {
         return service.getUsers()
     }
+
+    suspend fun getSpecUser(name: String): GithubUser {
+        return service.getSpecUser(name)
+    }
 }

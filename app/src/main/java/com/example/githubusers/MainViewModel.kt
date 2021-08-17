@@ -21,9 +21,20 @@ class MainViewModel @Inject constructor(
     private val _users = MutableLiveData<List<GithubUser>>()
     val users: LiveData<List<GithubUser>> = _users
 
+
+    private val _user = MutableLiveData<GithubUser>()
+    val user: LiveData<GithubUser> = _user
+
+
     fun loadUsers() {
         viewModelScope.launch(dispatcher) {
             _users.value = repository.getUsers()
+        }
+    }
+
+    fun loadSpecUser(name: String) {
+        viewModelScope.launch(dispatcher) {
+            _user.value = repository.getSpecUser(name)
         }
     }
 
