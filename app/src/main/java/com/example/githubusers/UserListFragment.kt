@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubusers.adapters.UserAdapter
 import com.example.githubusers.databinding.FragmentUserListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UserListFragment :Fragment() {
+    private val viewModel : MainViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -19,9 +22,14 @@ class UserListFragment :Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentUserListBinding.inflate(layoutInflater)
-        binding.listview.addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.HORIZONTAL))
-        binding.listview.adapter = UserAdapter(emptyList())
+        binding.listview.addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
 
+        viewModel.users.observe(viewLifecycleOwner,{ list ->
+            val adapter = UserAdapter(list)
+            binding.listview.adapter = adapter
+        })
+
+        viewModel.loadUsers()
         return binding.root
     }
 }
