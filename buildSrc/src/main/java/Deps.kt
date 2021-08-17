@@ -22,6 +22,7 @@ object Versions{
     const val coil = "1.3.1"
 
     const val hilt = "2.38.1"
+    const val paging = "3.0.1"
 
     //Test
     const val junit = "4.13.2"
@@ -64,6 +65,8 @@ object Deps {
     const val hilt_plugin = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}"
     const val hilt_android = "com.google.dagger:hilt-android:${Versions.hilt}"
     const val hilt_compiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
+
+    const val paging_runtime = "androidx.paging:paging-runtime:${Versions.paging}"
 
     //test
     const val junit = "junit:junit:${Versions.junit}"

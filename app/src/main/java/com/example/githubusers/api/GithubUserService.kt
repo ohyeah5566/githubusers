@@ -9,10 +9,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface GithubUserService {
     @GET("users")
-    suspend fun getUsers(): List<GithubUser>
+    suspend fun getUsers(@Query("since") id: Int): List<GithubUser>
 
     @GET("users/{username}")
     suspend fun getSpecUser(@Path("username") username: String): GithubUser

@@ -68,6 +68,7 @@ dependencies {
     kapt Deps.hilt_compiler
 
     implementation Deps.coil
+    implementation Deps.paging_runtime
 
     testImplementation Deps.mockk
 

@@ -2,13 +2,16 @@ package com.example.githubusers.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.githubusers.data.GithubUser
 import com.example.githubusers.databinding.ItemUserBinding
 
-class UserAdapter(val list: List<GithubUser>) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter :
+    PagingDataAdapter<GithubUser, UserAdapter.ViewHolder>(GithubUserDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -21,11 +24,10 @@ class UserAdapter(val list: List<GithubUser>) : RecyclerView.Adapter<UserAdapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position])
+        getItem(position)?.let {
+            holder.bind(it)
+        }
     }
-
-    override fun getItemCount() = list.size
-
 
     inner class ViewHolder(val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: GithubUser) {
@@ -36,4 +38,15 @@ class UserAdapter(val list: List<GithubUser>) : RecyclerView.Adapter<UserAdapter
             binding.tvType.text = user.type
         }
     }
+}
+
+class GithubUserDiffCallback : DiffUtil.ItemCallback<GithubUser>() {
+    override fun areItemsTheSame(oldItem: GithubUser, newItem: GithubUser): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: GithubUser, newItem: GithubUser): Boolean {
+        return oldItem == newItem
+    }
+
 }

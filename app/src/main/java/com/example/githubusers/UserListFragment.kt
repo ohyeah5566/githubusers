@@ -24,9 +24,11 @@ class UserListFragment :Fragment() {
         val binding = FragmentUserListBinding.inflate(layoutInflater)
         binding.listview.addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
 
-        viewModel.users.observe(viewLifecycleOwner,{ list ->
-            val adapter = UserAdapter(list)
-            binding.listview.adapter = adapter
+        val adapter = UserAdapter()
+        binding.listview.adapter = adapter
+
+        viewModel.users.observe(viewLifecycleOwner, { data ->
+            adapter.submitData(lifecycle, data)
         })
 
         viewModel.loadUsers()
