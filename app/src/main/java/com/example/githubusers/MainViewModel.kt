@@ -23,24 +23,17 @@ class MainViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : ViewModel() {
 
-    private val _users = MutableLiveData<PagingData<GithubUser>>()
-    val users: LiveData<PagingData<GithubUser>> = _users
+    val users = repository.getUsers(0).cachedIn(viewModelScope)
 
     private val _user = MutableLiveData<GithubUser>()
     val user: LiveData<GithubUser> = _user
 
 
-    fun loadUsers() {
-        viewModelScope.launch(dispatcher) {
-            repository.getUsers(0).cachedIn(viewModelScope).collect { data ->
-                _users.value = data
-            }
-        }
-    }
-
     fun loadSpecUser(name: String) {
         viewModelScope.launch(dispatcher) {
-            _user.value = repository.getSpecUser(name)
+            repository.getSpecUser(name).collect { user ->
+                _user.value = user
+            }
         }
     }
 

@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubusers.adapters.UserAdapter
 import com.example.githubusers.databinding.FragmentUserListBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class UserListFragment :Fragment() {
@@ -33,11 +37,24 @@ class UserListFragment :Fragment() {
             startActivity(intent)
         }
 
-        viewModel.users.observe(viewLifecycleOwner, { data ->
-            adapter.submitData(lifecycle, data)
-        })
+        lifecycleScope.launchWhenCreated {
+            viewModel.users.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
 
-        viewModel.loadUsers()
+        //error handle or show loading
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest {
+                if (it.source.refresh is LoadState.Error){
+                    val error =  it.source.refresh as LoadState.Error
+                    val message = error.error.message
+                    Toast.makeText(context,"oops",Toast.LENGTH_SHORT).show()
+                    error.error.printStackTrace()
+                }
+            }
+        }
+
         return binding.root
     }
 }
