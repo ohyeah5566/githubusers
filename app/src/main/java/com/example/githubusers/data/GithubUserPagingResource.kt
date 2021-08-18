@@ -21,11 +21,9 @@ class GithubUserPagingResource(
         }
     }
 
+    //當 PagingSource invalidation時?,會從這裡拿新key
     override fun getRefreshKey(state: PagingState<Int, GithubUser>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey ?: anchorPage?.nextKey
-        }
+        return state.anchorPosition
     }
 
 }

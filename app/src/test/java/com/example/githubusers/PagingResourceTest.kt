@@ -30,7 +30,8 @@ class PagingResourceTest {
     fun testPagingResource() = runBlockingTest {
         val service = mockk<GithubUserService>()
         val pagingSource = GithubUserPagingResource(service, 0)
-        coEvery { service.getUsers(0) } returns fakeList
+        var since = 0
+        coEvery { service.getUsers(since) } returns fakeList
         assertEquals(
             PagingSource.LoadResult.Page(
                 data = fakeList,
@@ -39,7 +40,25 @@ class PagingResourceTest {
             ),
             pagingSource.load(
                 PagingSource.LoadParams.Refresh(
-                    key = 0,
+                    key = since,
+                    loadSize = 100,
+                    placeholdersEnabled = false
+                )
+            )
+        )
+
+        //test prevKey
+        since = 31
+        coEvery { service.getUsers(since) } returns fakeList
+        assertEquals(
+            PagingSource.LoadResult.Page(
+                data = fakeList,
+                prevKey = 1,
+                nextKey = 100
+            ),
+            pagingSource.load(
+                PagingSource.LoadParams.Refresh(
+                    key = since,
                     loadSize = 100,
                     placeholdersEnabled = false
                 )
