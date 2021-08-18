@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.githubusers.databinding.FragmentMineBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,8 +23,14 @@ class MineFragment : Fragment() {
     ): View {
         val binding = FragmentMineBinding.inflate(layoutInflater)
         viewModel.user.observe(viewLifecycleOwner, { user ->
-            Log.d("MineFragment", user.toString())
-            //TODO ui
+            binding.ivAvatar.load(user.avatar_url) {
+                transformations(CircleCropTransformation())
+            }
+            binding.tvFollower.text = getString(R.string.mine_follower, user.followers)
+            binding.tvFollowing.text = getString(R.string.mine_following, user.following)
+            binding.tvLogin.text = user.login
+            binding.tvName.text = user.name
+            binding.tvMail.text = user.email
         })
         viewModel.loadSpecUser("ohyeah5566")
         return binding.root

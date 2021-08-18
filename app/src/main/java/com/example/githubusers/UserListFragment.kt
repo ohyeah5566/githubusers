@@ -1,5 +1,6 @@
 package com.example.githubusers
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,11 @@ class UserListFragment :Fragment() {
 
         val adapter = UserAdapter()
         binding.listview.adapter = adapter
+        adapter.onUserClickEvent = { user ->
+            val intent = Intent(context, UserDetailActivity::class.java)
+            intent.putExtra(UserDetailActivity.INTENT_KEY_USER, user)
+            startActivity(intent)
+        }
 
         viewModel.users.observe(viewLifecycleOwner, { data ->
             adapter.submitData(lifecycle, data)

@@ -13,6 +13,8 @@ import com.example.githubusers.databinding.ItemUserBinding
 class UserAdapter :
     PagingDataAdapter<GithubUser, UserAdapter.ViewHolder>(GithubUserDiffCallback()) {
 
+    var onUserClickEvent : (user:GithubUser) -> Unit = {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemUserBinding.inflate(
@@ -36,6 +38,9 @@ class UserAdapter :
             }
             binding.tvName.text = user.login
             binding.tvType.text = user.type
+            binding.root.setOnClickListener {
+                onUserClickEvent(user)
+            }
         }
     }
 }
