@@ -41,7 +41,7 @@ class MainViewModel @Inject constructor(
                         _user.value = result.data
                     }
                     is BaseResult.Error -> {
-                        _userFail.send(result.ex.message ?: "oops")
+                        _userFail.send(result.ex.customMessage())
                     }
                 }
             }

@@ -18,8 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class UserListFragment :Fragment() {
-    private val viewModel : MainViewModel by viewModels()
+class UserListFragment : Fragment() {
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +27,12 @@ class UserListFragment :Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentUserListBinding.inflate(layoutInflater)
-        binding.listview.addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
+        binding.listview.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                LinearLayoutManager.VERTICAL
+            )
+        )
 
         val adapter = UserAdapter()
         binding.listview.adapter = adapter
@@ -46,11 +51,24 @@ class UserListFragment :Fragment() {
         //error handle or show loading
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest {
-                if (it.source.refresh is LoadState.Error){
-                    val error =  it.source.refresh as LoadState.Error
-                    val message = error.error.message ?: "oops"
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    error.error.printStackTrace()
+                val error = when {
+                    it.source.refresh is LoadState.Error -> {
+                        it.source.refresh as LoadState.Error
+                    }
+                    it.source.append is LoadState.Error -> {
+                        it.source.append as LoadState.Error
+                    }
+                    it.source.prepend is LoadState.Error -> {
+                        it.source.prepend as LoadState.Error
+                    }
+                    else -> {
+                        null
+                    }
+                }
+
+                error?.let { error1 ->
+                    error1.error.printStackTrace()
+                    Toast.makeText(context, error1.error.customMessage(), Toast.LENGTH_SHORT).show()
                 }
             }
         }
