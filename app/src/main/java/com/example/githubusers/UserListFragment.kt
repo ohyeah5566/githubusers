@@ -48,8 +48,8 @@ class UserListFragment :Fragment() {
             adapter.loadStateFlow.collectLatest {
                 if (it.source.refresh is LoadState.Error){
                     val error =  it.source.refresh as LoadState.Error
-                    val message = error.error.message
-                    Toast.makeText(context,"oops",Toast.LENGTH_SHORT).show()
+                    val message = error.error.message ?: "oops"
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                     error.error.printStackTrace()
                 }
             }

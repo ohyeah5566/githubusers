@@ -5,12 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.githubusers.databinding.FragmentMineBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MineFragment : Fragment() {
@@ -32,7 +35,17 @@ class MineFragment : Fragment() {
             binding.tvName.text = user.name
             binding.tvMail.text = user.email
         })
-        viewModel.loadSpecUser("ohyeah5566")
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.userFail.collect {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        if (savedInstanceState == null) {
+            viewModel.loadSpecUser("ohyeah5566")
+        }
+
         return binding.root
     }
 }
