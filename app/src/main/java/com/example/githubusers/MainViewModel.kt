@@ -30,18 +30,18 @@ class MainViewModel @Inject constructor(
     val user: LiveData<GithubUser> = _user
 
     // single event
-    private val _userFail = Channel<String>(Channel.BUFFERED)
-    val userFail = _userFail.receiveAsFlow()
+    private val _userFail = MutableSharedFlow<String>()
+    val userFail : SharedFlow<String> = _userFail
 
     fun loadSpecUser(name: String) {
         viewModelScope.launch(dispatcher) {
-            repository.getSpecUser(name).collect { result ->
+            repository.getSpecUser(name).let { result ->
                 when (result) {
                     is BaseResult.Success -> {
                         _user.value = result.data
                     }
                     is BaseResult.Error -> {
-                        _userFail.send(result.ex.customMessage())
+                        _userFail.emit(result.ex.customMessage())
                     }
                 }
             }

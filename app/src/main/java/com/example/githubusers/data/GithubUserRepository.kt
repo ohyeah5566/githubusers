@@ -23,14 +23,12 @@ class GithubUserRepository @Inject constructor(
         ).flow
     }
 
-    fun getSpecUser(name: String): Flow<BaseResult<GithubUser>> = flow {
-        emit(
-            try {
-                val result = service.getSpecUser(name)
-                BaseResult.Success(result)
-            } catch (ex: Throwable) {
-                BaseResult.Error(ex)
-            }
-        )
+    suspend fun getSpecUser(name: String): BaseResult<GithubUser> {
+        return try {
+            val result = service.getSpecUser(name)
+            BaseResult.Success(result)
+        } catch (ex: Throwable) {
+            BaseResult.Error(ex)
+        }
     }
 }

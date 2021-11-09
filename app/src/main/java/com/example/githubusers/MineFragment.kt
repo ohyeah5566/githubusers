@@ -42,7 +42,7 @@ class MineFragment : Fragment() {
             }
         }
 
-        if (savedInstanceState == null) {
+        if (viewModel.user.value == null) {
             viewModel.loadSpecUser("ohyeah5566")
         }
 

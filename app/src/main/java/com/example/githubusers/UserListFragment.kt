@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubusers.adapters.UserAdapter
 import com.example.githubusers.databinding.FragmentUserListBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
@@ -43,7 +44,7 @@ class UserListFragment : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            viewModel.users.collectLatest { pagingData ->
+            viewModel.users.collect { pagingData ->
                 adapter.submitData(pagingData)
             }
         }
