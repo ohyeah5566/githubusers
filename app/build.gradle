@@ -74,5 +74,6 @@ dependencies {
     testImplementation Deps.mockk
 
     testImplementation Deps.core_testing //InstantTaskExecutorRule
+    testImplementation Deps.turbine //sharedFlow test
 
 }

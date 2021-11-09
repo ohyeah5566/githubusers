@@ -29,7 +29,7 @@ object Versions{
     const val androidx_junit = "1.1.3"
     const val mockk = "1.12.0"
     const val core_testing = "2.1.0"
-
+    const val turbine= "0.7.0"
 }
 
 object Deps {
@@ -62,8 +62,8 @@ object Deps {
 
     const val coil = "io.coil-kt:coil:${Versions.coil}"
 
-    const val hilt_plugin = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}"
-    const val hilt_android = "com.google.dagger:hilt-android:${Versions.hilt}"
+    const val hilt_plugin =   "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}"
+    const val hilt_android =  "com.google.dagger:hilt-android:${Versions.hilt}"
     const val hilt_compiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
 
     const val paging_runtime = "androidx.paging:paging-runtime:${Versions.paging}"
@@ -74,6 +74,7 @@ object Deps {
     const val mockk = "io.mockk:mockk:${Versions.mockk}"
     const val mockk_jvm = "io.mockk:mockk-agent-jvm:${Versions.core_testing}"
     const val core_testing = "androidx.arch.core:core-testing:${Versions.core_testing}"
+    const val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
 }
 
 

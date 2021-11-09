@@ -1,6 +1,7 @@
 package com.example.githubusers
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.example.githubusers.data.BaseResult
 import com.example.githubusers.data.GithubUser
 import com.example.githubusers.data.GithubUserRepository
@@ -30,11 +31,7 @@ class MainViewModelTest {
         val repository = mockk<GithubUserRepository>(relaxed = true)
         val testDispatcher = TestCoroutineDispatcher()
         val viewModel = MainViewModel(repository, testDispatcher)
-        coEvery { repository.getSpecUser("A") } returns flow {
-            emit(
-                BaseResult.Success(user)
-            )
-        }
+        coEvery { repository.getSpecUser("A") } returns BaseResult.Success(user)
 
         viewModel.loadSpecUser("A")
         assert(viewModel.user.value?.name == "name")
@@ -46,15 +43,18 @@ class MainViewModelTest {
         val testDispatcher = TestCoroutineDispatcher()
         val viewModel = MainViewModel(repository, testDispatcher)
 
-        coEvery { repository.getSpecUser("A") } returns flow {
-            val ex = Exception("FailTest")
-            emit(
-                BaseResult.Error(ex)
-            )
-        }
+        coEvery { repository.getSpecUser("A") } returns BaseResult.Error(Exception("FailTest"))
 
-        viewModel.loadSpecUser("A")
-        assert(viewModel.userFail.first() == "FailTest")
+//        因為sharedFlow特性的關係 所以原本的寫法first()沒有東西
+//        看了一下大多都推薦用turbine測試
+//        viewModel.loadSpecUser("A")
+//        assert(viewModel.userFail.first() == "FailTest")
+
+        viewModel.userFail.test {
+            viewModel.loadSpecUser("A")
+            assert(awaitItem() == "FailTest")
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
 }
